@@ -21,6 +21,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @SQLDelete(sql = "UPDATE releases SET deleted_at = NOW() WHERE id = ?") // Usando soft delete, atualizando a coluna deleted_at em vez de excluir fisicamente
 @SQLRestriction(value = "deleted_at IS NULL") // Restringindo as consultas para não retornar registros com deleted_at preenchido
 public class ReleaseEntity {
