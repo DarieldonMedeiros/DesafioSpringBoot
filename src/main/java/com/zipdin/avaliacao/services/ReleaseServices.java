@@ -2,6 +2,8 @@ package com.zipdin.avaliacao.services;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.zipdin.avaliacao.dto.UpdateNotesDTO;
@@ -48,5 +50,9 @@ public class ReleaseServices {
             throw new RuntimeException("Release não encontrado com o id: " + id);
         }
         releaseRepository.deleteById(id);
+    }
+
+    public Page<ReleaseEntity> findAll(Pageable pageable) {
+        return releaseRepository.findAll(pageable);
     }
 }

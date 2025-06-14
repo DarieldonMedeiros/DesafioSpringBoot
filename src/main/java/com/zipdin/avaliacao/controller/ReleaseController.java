@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -89,6 +93,12 @@ public class ReleaseController {
         releaseServices.deleteRelease(id);
         GenericResponseDTO response = new GenericResponseDTO("Release deletado com sucesso!");
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //Paginação
+    @GetMapping
+    public ResponseEntity<Page<ReleaseEntity>> getAllReleases(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(releaseServices.findAll(pageable));
     }
 
 }

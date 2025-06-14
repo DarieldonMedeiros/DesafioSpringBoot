@@ -227,5 +227,5 @@ Assim como foi feito nos itens anteriores, será mostrado o código responsável
 
 ## 🔧 Pontos Bônus (não obrigatórios)
 
-- Criar paginação e filtros de pesquisa nas APIs de listagem: **_Pendente❌_**
+- Criar paginação e filtros de pesquisa nas APIs de listagem: **_Implementado com sucesso a parte de paginação através do Get All! ✅_**
 - Criar um dockerfile para a aplicação, que permita a fácil construção de uma imagem Docker da aplicação: **_Pendente❌_**
