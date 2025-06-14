@@ -21,26 +21,32 @@ public class ReleaseServices {
     }
 
     @Transactional
-    public ReleaseEntity save(ReleaseEntity releaseEntity){
+    public ReleaseEntity saveRelease(ReleaseEntity releaseEntity){
         return releaseRepository.save(releaseEntity);
     }
 
     public Optional<ReleaseEntity> findById(Long id) {
+        if (!releaseRepository.existsById(id)) {
+            throw new RuntimeException("Release não encontrado com o id: " + id);
+        }
         return releaseRepository.findById(id);
     }
 
     public void updateReleaseNotes(Long id, UpdateNotesDTO updateNotesDTO) {
-        ReleaseEntity releaseEntity = findReleaseById(id);
+        Optional<ReleaseEntity> releaseEntityOptional = findById(id);
 
         // String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
-        releaseEntity.setNotes(updateNotesDTO.notes());
-        // releaseEntity.setUpdatedBy(userUpdate);
-        
-        releaseRepository.save(releaseEntity);
+        releaseEntityOptional.ifPresent(releaseEntity -> {
+            releaseEntity.setNotes(updateNotesDTO.notes());
+            // releaseEntity.setUpdatedBy(userUpdate);
+            releaseRepository.save(releaseEntity);
+        });
     }
 
-    private ReleaseEntity findReleaseById(Long id) {
-        return releaseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Release não encontrado com ID: " + id));
+    public void deleteRelease(Long id) {
+        if (!releaseRepository.existsById(id)) {
+            throw new RuntimeException("Release não encontrado com o id: " + id);
+        }
+        releaseRepository.deleteById(id);
     }
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,7 @@ public class ReleaseController {
         var releaseEntity = new ReleaseEntity();
         BeanUtils.copyProperties(releaseDTO, releaseEntity);
         releaseEntity.setReleasedAt(LocalDateTime.now());
-        var savedRelease = releaseServices.save(releaseEntity);
+        var savedRelease = releaseServices.saveRelease(releaseEntity);
 
         // Montando a resposta
         Map<String, Object> response = new HashMap<>();
@@ -69,6 +70,13 @@ public class ReleaseController {
     public ResponseEntity<Object> updateReleaseNotes(@PathVariable(value = "id") Long id, @RequestBody @Valid UpdateNotesDTO updateNotesDTO) {
         releaseServices.updateReleaseNotes(id, updateNotesDTO);
         GenericResponseDTO response = new GenericResponseDTO("Release atualizado com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteRelease(@PathVariable(value = "id") Long id){
+        releaseServices.deleteRelease(id);
+        GenericResponseDTO response = new GenericResponseDTO("Release deletado com sucesso!");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
