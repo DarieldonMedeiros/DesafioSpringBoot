@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: avaliacao
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:h2:mem:releases
+    username: user
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
