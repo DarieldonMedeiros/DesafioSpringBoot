@@ -1,6 +1,6 @@
 package com.zipdin.avaliacao.controller;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +44,7 @@ public class ReleaseController {
     public ResponseEntity<Object> createRelease(@RequestBody @Valid ReleaseDTO releaseDTO){
         var releaseEntity = new ReleaseEntity();
         BeanUtils.copyProperties(releaseDTO, releaseEntity);
-        releaseEntity.setReleasedAt(OffsetDateTime.now());
+        releaseEntity.setReleasedAt(LocalDateTime.now());
         var savedRelease = releaseServices.saveRelease(releaseEntity);
 
         // Montando a resposta

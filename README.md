@@ -58,7 +58,7 @@ Como a coluna commits no arquivo `ReleaseEntity` é um `List<String>`, logo foi 
 }
 ```
 
-#### Solução
+#### Solução POST
 
 A utilização da classe [`ReleaseController.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/controller/ReleaseController.java) junto da utilização do aplicativo <a href="https://www.postman.com/downloads/" target="_blank"><img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"></a> que é onde de fato é feita a requisição de criação do release. Logo abaixo são mostrados o código da requisição POST e a imagem do aplicativo Postman.
 
@@ -103,7 +103,7 @@ A utilização da classe [`ReleaseController.java`](https://github.com/Darieldon
 }
 ```
 
-#### Solução
+#### Solução GET
 
 Da mesma forma que foi feito acima no endpoint POST, logo abaixo será mostrado o código do endpoint GET, assim como a imagem da requisição feita no Postman.
 
@@ -155,7 +155,7 @@ Da mesma forma que foi feito acima no endpoint POST, logo abaixo será mostrado 
 }
 ```
 
-#### Solução
+#### Solução PUT
 
 Seguindo o mesmo padrão, logo abaixo tem o código da requisição PUT e a imagem da requisição no Postman, além de uma requisição GET, mostrando que de fato houve a mudança do valor em `notes`.
 
@@ -189,7 +189,7 @@ Seguindo o mesmo padrão, logo abaixo tem o código da requisição PUT e a imag
 }
 ```
 
-#### Solução
+#### Solução DELETE
 
 Assim como foi feito nos itens anteriores, será mostrado o código responsável pelo delete, a imagem da requisição feita no Postman, a requisição GET não conseguindo acessar o item deletado e além disso será mostrada a imagem no banco H2 mostrando que de fato o item ainda se encontra na tabela, porém a informação deleted_at encontra-se preenchida.
 
@@ -219,8 +219,8 @@ Assim como foi feito nos itens anteriores, será mostrado o código responsável
 ## ✅ Requisitos Técnicos
 
 - Java 17+ com Spring Boot: **_(Foi utilizado o Java 17 nesta avaliação) ✅_**
-- Persistência com JPA: **_implementada com sucesso ✅_**
-- Commit da prova em repositório Git público ou zip: **_Implementado com sucesso!_**
+- Persistência com JPA: **_Implementado com sucesso! ✅_**
+- Commit da prova em repositório Git público ou zip: **_Implementado com sucesso! ✅_**
 - Autenticação JWT (mockada ou simples): **_Pendente❌_**
 - Tratamento de erros e validações: **_Pendente❌_**
 - Swagger ou documentação de endpoints: **_Pendente❌_**

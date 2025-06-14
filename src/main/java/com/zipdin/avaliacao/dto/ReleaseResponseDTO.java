@@ -1,6 +1,6 @@
 package com.zipdin.avaliacao.dto;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record ReleaseResponseDTO(
@@ -12,5 +12,5 @@ public record ReleaseResponseDTO(
     String notes,
     String user,
     String userUpdate,
-    OffsetDateTime releasedAt
+    LocalDateTime releasedAt
 ) {}

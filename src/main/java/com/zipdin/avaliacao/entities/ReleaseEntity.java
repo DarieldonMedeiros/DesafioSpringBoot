@@ -1,6 +1,6 @@
 package com.zipdin.avaliacao.entities;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -63,10 +63,10 @@ public class ReleaseEntity {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime releasedAt;
+    private LocalDateTime releasedAt;
 
     @Column(name = "deleted_at")
-    private OffsetDateTime deletedAt;
+    private LocalDateTime deletedAt;
 
     public void setSystem(String system) {
         this.system = system != null ? system.trim() : null;
