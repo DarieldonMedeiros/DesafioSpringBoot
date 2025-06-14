@@ -3,16 +3,22 @@ package com.zipdin.avaliacao.controller;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zipdin.avaliacao.dto.GenericResponseDTO;
 import com.zipdin.avaliacao.dto.ReleaseDTO;
+import com.zipdin.avaliacao.dto.UpdateNotesDTO;
 import com.zipdin.avaliacao.entities.ReleaseEntity;
 import com.zipdin.avaliacao.repository.ReleaseRepository;
 import com.zipdin.avaliacao.services.ReleaseServices;
@@ -45,6 +51,25 @@ public class ReleaseController {
         response.put("message", "Release criado com sucesso!");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getReleaseByID(@PathVariable(value = "id") Long id){
+        Optional<ReleaseEntity> releaseEntityOptional = releaseServices.findById(id);
+
+        if(!releaseEntityOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Release não encontrado!");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(releaseEntityOptional.get());
+
+        }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateReleaseNotes(@PathVariable(value = "id") Long id, @RequestBody @Valid UpdateNotesDTO updateNotesDTO) {
+        releaseServices.updateReleaseNotes(id, updateNotesDTO);
+        GenericResponseDTO response = new GenericResponseDTO("Release atualizado com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
