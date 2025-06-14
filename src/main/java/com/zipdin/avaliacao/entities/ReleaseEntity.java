@@ -1,6 +1,6 @@
 package com.zipdin.avaliacao.entities;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,8 +28,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE releases SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction(value = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE releases SET deleted_at = NOW() WHERE id = ?") // Usando soft delete, atualizando a coluna deleted_at em vez de excluir fisicamente
+@SQLRestriction(value = "deleted_at IS NULL") // Restringindo as consultas para não retornar registros com deleted_at preenchido
 public class ReleaseEntity {
 
     @Id
@@ -45,7 +45,7 @@ public class ReleaseEntity {
     private String version;
 
     @NotEmpty(message = "Commits não pode ser vazio")
-    @Convert(converter = StringListConverter.class)
+    @Convert(converter = StringListConverter.class) // Converter para armazenar a lista de strings como uma coluna na mesma tabela
     @Column(name = "commits")
     private List<String> commits;
 
@@ -55,7 +55,7 @@ public class ReleaseEntity {
     @NotBlank(message = "User é obrigatório")
     @Size(max = 100, message = "User não pode exceder 100 caracteres")
     @Column(name = "`user`", nullable = false, length = 100)
-    private String user;
+    private String user;  //User é uma palavra reservada em SQL, por isso utilizo o caractere `
 
     @Size(max = 100, message = "User Update não pode exceder 100 caracteres")
     @Column(length = 100)
@@ -63,10 +63,10 @@ public class ReleaseEntity {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private LocalDateTime releasedAt;
+    private OffsetDateTime releasedAt;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private OffsetDateTime deletedAt;
 
     public void setSystem(String system) {
         this.system = system != null ? system.trim() : null;
