@@ -1,6 +1,8 @@
 package com.zipdin.avaliacao.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -35,7 +37,14 @@ public class ReleaseController {
         var releaseEntity = new ReleaseEntity();
         BeanUtils.copyProperties(releaseDTO, releaseEntity);
         releaseEntity.setReleasedAt(LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.CREATED).body(releaseServices.save(releaseEntity));
+        var savedRelease = releaseServices.save(releaseEntity);
+
+        // Montando a resposta
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", savedRelease.getId());
+        response.put("message", "Release criado com sucesso!");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }
