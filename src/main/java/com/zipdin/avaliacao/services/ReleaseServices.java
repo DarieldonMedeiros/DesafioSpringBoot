@@ -67,10 +67,10 @@ public class ReleaseServices {
     public void addCommitsToRelease(Long id, AddCommitsRequestDTO addCommitsRequestDTO){
         ReleaseEntity releaseEntity = findById(id).get();
 
-        // String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
+        String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
 
         releaseEntity.getCommits().addAll(addCommitsRequestDTO.commits());
-        // releaseEntity.setUserUpdate(userUpdate);
+        releaseEntity.setUserUpdate(userUpdate);
 
         releaseRepository.save(releaseEntity);
     }

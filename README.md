@@ -4,6 +4,86 @@
 
 Criar uma API REST para gerenciamento de releases de sistemas. A API deverá ser desenvolvida utilizando **Java** com **Spring Boot**. seguindo as especificações abaixo.
 
+## 🔗 Lista de Requests
+
+Para realiszar os requests, foi criado um arquivo chamado [`request.http`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/request.http), que mostra as requisições REST que foram feitas para este projeto.
+
+```http
+# Aqui vai a lista de requisições na ordem em que elas devem ser feitas
+
+# 1. Register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+    "login": "darieldonMedeiros",
+    "password": "123456789",
+    "role": "ADMIN"
+}
+
+# 2. Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "login": "darieldonMedeiros",
+    "password": "123456789"
+}
+
+# 3. Create Release (Somente ADMIN pode criar Release)
+@token = COLAR_SEU_TOKEN_AQUI
+# Aqui é o local que ficará salvo o token após ser feito o login
+
+POST http://localhost:8080/releases
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "system": "string",
+    "version": "string",
+    "commits": ["string", "string"] ,
+    "notes": "string",
+    "user": "string"
+}
+
+# A partir daqui não tem uma ordem específica para fazer as operações
+
+# 4. Get Release By ID
+@id = 1 # ID que pode ser utilizado em várias requisições
+GET http://localhost:8080/releases/{{id}}
+Authorization: Bearer {{token}}
+
+# 5. Update Release Notes
+PUT http://localhost:8080/releases/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "notes": "darieldon"
+}
+
+# 6. Delete Release By ID
+DELETE http://localhost:8080/releases/{{id}}
+Authorization: Bearer {{token}}
+
+# 7. Get All Releases
+GET http://localhost:8080/releases
+Authorization: Bearer {{token}}
+
+
+# 8. Patch commit
+PATCH http://localhost:8080/releases/2/commits
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "commits": ["string1", "string2"]
+}
+
+
+
+```
+
 ## 🗃️ Modelo de Dados
 
 Crie uma tabela chamada `releases`
@@ -238,6 +318,53 @@ Assim como foi feito nos itens anteriores, será mostrado o código responsável
 
 <center><b>Tabela no banco H2 mostrando que o id ainda se encontra </b></center>
 
+### 🔷 **Patch commit**
+
+`PATCH /releases/{id}/commits`
+
+**Request Body:**
+
+```Json
+{
+    "commits": "string"
+}
+```
+
+**Response:**
+
+```Json
+{
+    "message": "Commits atualizados com sucesso!"
+}
+```
+
+#### Solução PATCH
+
+A requisição PATCH foi algo que eu mesmo pensei em adicionar, durante a resolução da avaliação, no VSCODE aparece a lista de Commits então eu pensei em algo com uma funcionalidade parecida.
+Abaixo tem o código que faz a requisição `PATCH` EM ReleaseController.
+
+```Java
+
+    @PatchMapping("/{id}/commits")
+    @Operation(summary = "Atualizar", description = "Atualizar commits do release com o ID x")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Commits atualizados com sucesso!"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
+    public ResponseEntity<GenericResponseDTO> addCommitsToRelease(@PathVariable(value = "id") Long id, @RequestBody @Valid AddCommitsRequestDTO addCommitsRequestDTO){
+        releaseServices.addCommitsToRelease(id, addCommitsRequestDTO);
+        GenericResponseDTO response = new GenericResponseDTO("Commits atualizados com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+```
+
+Logo abaixo tem uma imagem de como ficou a requisição `PATCH` no Postman.
+
+![Endpoint PATCH](./imgs/PATCH.jpg)
+
+<center><b>Requisição PATCH </b></center>
+<br>
+
 ### 🔷 **Autenticação JWT**
 
 A autenticação JWT foi realizada utilizando Spring Security. Os arquivos que compõem as parte de autenticação são os seguintes:
@@ -389,9 +516,9 @@ docker run --name avaliacao -p 8080:8080 zipdin/avaliacao
 
 ## 🧑🏻‍💼 Autor
 
-  Darieldon de Brito Medeiros
+Darieldon de Brito Medeiros
 
-  ### Seguem abaixo o meu email e meu linkedin
+### Seguem abaixo o meu email e meu linkedin
 
-  <a href = "darieldonbm99@outlook.com"><img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white" target="_blank"></a>
-  <a href="https://www.linkedin.com/in/darieldon-de-brito-medeiros" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
+<a href = "darieldonbm99@outlook.com"><img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white" target="_blank"></a>
+<a href="https://www.linkedin.com/in/darieldon-de-brito-medeiros" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>

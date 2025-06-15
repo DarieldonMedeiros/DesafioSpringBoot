@@ -1,0 +1,72 @@
+# Aqui vai a lista de requisições na ordem em que elas devem ser feitas
+
+# 1. Register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+    "login": "darieldonMedeiros",
+    "password": "123456789",
+    "role": "ADMIN"
+}
+
+# 2. Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "login": "darieldonMedeiros",
+    "password": "123456789"
+}
+
+# 3. Create Release (Somente ADMIN pode criar Release)
+@token = COLAR_SEU_TOKEN_AQUI
+# Aqui é o local que ficará salvo o token após ser feito o login
+
+POST http://localhost:8080/releases
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "system": "string",
+    "version": "string",
+    "commits": ["string", "string"] ,
+    "notes": "string",
+    "user": "string"
+}
+
+# A partir daqui não tem uma ordem específica para fazer as operações
+
+# 4. Get Release By ID
+@id = 1 # ID que pode ser utilizado em várias requisições
+GET http://localhost:8080/releases/{{id}}
+Authorization: Bearer {{token}}
+
+# 5. Update Release Notes
+PUT http://localhost:8080/releases/{{id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "notes": "darieldon"
+}
+
+# 6. Delete Release By ID
+DELETE http://localhost:8080/releases/{{id}}
+Authorization: Bearer {{token}}
+
+# 7. Get All Releases
+GET http://localhost:8080/releases
+Authorization: Bearer {{token}}
+
+
+# 8. Patch commit
+PATCH http://localhost:8080/releases/2/commits
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "commits": ["string1", "string2"]
+}
+
+
