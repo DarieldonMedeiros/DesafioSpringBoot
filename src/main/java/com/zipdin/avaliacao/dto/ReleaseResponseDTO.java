@@ -3,6 +3,9 @@ package com.zipdin.avaliacao.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "ReleaseResponse")
 public record ReleaseResponseDTO(
     String message,
     Long id,

@@ -2,10 +2,12 @@ package com.zipdin.avaliacao.dto;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 
+@Schema(name = "Release")
 public class ReleaseDTO {
 
     @NotBlank(message = "System é obrigatório")

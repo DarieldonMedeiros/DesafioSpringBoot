@@ -134,6 +134,28 @@ Da mesma forma que foi feito acima no endpoint POST, logo abaixo será mostrado 
 ![Endpoint GET](./imgs/GET.jpg)
 
 <center><b>Endoint GET</b></center>
+<br>
+
+Com a implementação do Spring Security através do JWT, o valor updateUser é atualizado de acordo com o código encontrado no arquivo [`ReleaseServices.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/services/ReleaseServices.java) mostrado abaixo.
+
+```Java
+    @Transactional
+    public ReleaseEntity saveRelease(ReleaseEntity releaseEntity){
+        String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
+        releaseEntity.setUserUpdate(userUpdate);
+        return releaseRepository.save(releaseEntity);
+    }
+
+    public void updateReleaseNotes(Long id, UpdateNotesDTO updateNotesDTO) {
+        String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<ReleaseEntity> releaseEntityOptional = findById(id);
+        releaseEntityOptional.ifPresent(releaseEntity -> {
+            releaseEntity.setUserUpdate(userUpdate);
+            releaseEntity.setNotes(updateNotesDTO.notes());
+            releaseRepository.save(releaseEntity);
+        });
+    }
+```
 
 ### 🔷 **Update Release Notes**
 
@@ -216,14 +238,89 @@ Assim como foi feito nos itens anteriores, será mostrado o código responsável
 
 <center><b>Tabela no banco H2 mostrando que o id ainda se encontra </b></center>
 
+### 🔷 **Autenticação JWT**
+
+A autenticação JWT foi realizada utilizando Spring Security. Os arquivos que compõem as parte de autenticação são os seguintes:
+
+1. Pasta configs
+
+   - [`SecurityConfigurations.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/configs/SecurityConfigurations.java)
+   - [`SecurityFilter.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/configs/SecurityFilter.java)
+
+2. Pasta controller (Onde se criou 2 métodos POST: um para login e outro para register)
+
+   - [`AuthenticationController.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/controller/AuthenticationController.java)
+
+3. Pasta dto
+
+   - [`AuthenticationDTO.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/dto/AuthenticationDTO.java)
+   - [`LoginResponseDTO.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/dto/LoginResponseDTO.java)
+   - [`RegisterDTO.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/dto/RegisterDTO.java)
+
+4. Pasta entities
+
+   - [`UserEntity.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/entities/UserEntity.java)
+   - [`UserRole.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/entities/UserRole.java)
+
+5. Pasta repository
+
+   - [`UserRepository.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/repository/UserRepository.java)
+
+6. Pasta services (onde de fato tem a classe que faz a criação do token utilizando o JWT)
+   - [`AuthorizationService.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/services/AuthorizationService.java)
+   - [`TokenService.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/services/TokenService.java)
+
+Como foi mencionado no item 2, foram feitas 2 requisições POST no AuthenticationController, onde a requisição via Postman é mostrada abaixo.
+
+![Endpoint POST](./imgs/REGISTER.jpg)
+
+<center><b>Endpoint PUT: Registra o login, senha e role do usuário </b></center>
+<br>
+
+![Endpoint POST](./imgs/LOGIN.jpg)
+
+<center><b>Endpoint PUT: Realiza o login do usuário e gera o token via JWT </b></center>
+<br>
+
+**Observação: só quem possui a role `"ADMIN"` pode utilizar o comando Post para gerar o release.**
+
+### 🔷 **Tratamento de Erros e Validações**
+
+Este item foi feito de forma parcial ao criar a pasta exception que possui 2 arquivos:
+
+1. [`GlobalException.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/exception/GlobalException.java): a classe que possui a annotation `@ControllerAdvice` que permite a centralização da lógica de tratamento de exceções.
+2. [`ResourceNotFoundException.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/exception/ResourceNotFoundException.java) classe simples que é acionada se o `HttpStatus.NOT_FIND` acontecer.
+
+### 🔷 **Swagger**
+
+Através da pasta configs, foi criado o arquivo [`OpenAPIConfiguration.java`](<(https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/configs/OpenApiConfigurations.java)>), que instancia o Swagger para a aplicação.
+
+Foi necessário também criar uma Função de validação (`@Bean`) no arquivo [`SecurityConfigurations.java`](https://github.com/DarieldonMedeiros/DesafioSpringBoot/blob/main/src/main/java/com/zipdin/avaliacao/configs/SecurityConfigurations.java) para que as instâncias do Swagger fossem ignoradas pelo Spring Security.
+
+```Java
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return web -> { web.ignoring().requestMatchers(
+                                    "/v2/api-docs/**",
+                                    "v3/api-docs/**",
+                                    "/swagger-resources/**",
+                                    "/swagger-ui.html",
+                                    "/swagger-ui/**",
+                                    "/webjars/**"
+            );
+        };
+    }
+```
+
 ## ✅ Requisitos Técnicos
 
 - Java 17+ com Spring Boot: **_(Foi utilizado o Java 17 nesta avaliação) ✅_**
 - Persistência com JPA: **_Implementado com sucesso! ✅_**
 - Commit da prova em repositório Git público ou zip: **_Implementado com sucesso! ✅_**
 - Autenticação JWT (mockada ou simples): **_Implementado com sucesso! ✅_**
-- Tratamento de erros e validações: **_Pendente❌_**
-- Swagger ou documentação de endpoints: **_Pendente❌_**
+
+- Tratamento de erros e validações: **_Implementado parcialmente! ✅_**
+- Swagger ou documentação de endpoints: **_Implementado com sucesso! ✅_**
 
 ## 🔧 Pontos Bônus (não obrigatórios)
 

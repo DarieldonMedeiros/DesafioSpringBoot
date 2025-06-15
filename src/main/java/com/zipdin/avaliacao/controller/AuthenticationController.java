@@ -18,10 +18,15 @@ import com.zipdin.avaliacao.entities.UserEntity;
 import com.zipdin.avaliacao.repository.UserRepository;
 import com.zipdin.avaliacao.services.TokenService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("auth")
+@Tag(name = "Authentication")
 public class AuthenticationController {
 
     @Autowired
@@ -34,6 +39,12 @@ public class AuthenticationController {
     private UserRepository userRepository;
 
     @PostMapping("/login")
+    @Operation(summary = "Login", description = "Realiza o Login do usuário já cadastrado")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Login realizado com sucesso!"),
+        @ApiResponse(responseCode = "400", description = "Login ou senha incorretos"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
     public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDTO data){
         var UsernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(UsernamePassword);
@@ -44,6 +55,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Register", description = "Realiza o cadastro do usuário")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso!"),
+        @ApiResponse(responseCode = "400", description = "Login ja cadastrado"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
     public ResponseEntity<Object> register(@RequestBody @Valid RegisterDTO data){
         if(this.userRepository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 

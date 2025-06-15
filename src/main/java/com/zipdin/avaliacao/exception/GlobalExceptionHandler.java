@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class GlobalException {
+public class GlobalExceptionHandler {
 
     // Exceção de validação
     @ExceptionHandler(MethodArgumentNotValidException.class)

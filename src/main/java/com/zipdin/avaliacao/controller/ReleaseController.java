@@ -29,10 +29,15 @@ import com.zipdin.avaliacao.entities.ReleaseEntity;
 import com.zipdin.avaliacao.repository.ReleaseRepository;
 import com.zipdin.avaliacao.services.ReleaseServices;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/releases")
+@Tag(name = "Releases")
 public class ReleaseController {
 
     private final ReleaseServices releaseServices;
@@ -45,6 +50,11 @@ public class ReleaseController {
     }
 
     @PostMapping
+    @Operation(summary = "Salvar", description = "Cadastrar novo release")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Release criado com sucesso!"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
     public ResponseEntity<Object> createRelease(@RequestBody @Valid ReleaseDTO releaseDTO){
         var releaseEntity = new ReleaseEntity();
         BeanUtils.copyProperties(releaseDTO, releaseEntity);
@@ -60,6 +70,11 @@ public class ReleaseController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar por ID", description = "Buscar release por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Release listado com sucesso!"),
+        @ApiResponse(responseCode = "404", description = "Release não encontrado"),
+    })
     public ResponseEntity<ReleaseResponseDTO> getReleaseByID(@PathVariable(value = "id") Long id){
         Optional<ReleaseEntity> releaseEntityOptional = releaseServices.findById(id);
         if (releaseEntityOptional.isEmpty()) {
@@ -82,6 +97,11 @@ public class ReleaseController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar", description = "Atualizar release")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Release atualizado com sucesso!"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
     public ResponseEntity<Object> updateReleaseNotes(@PathVariable(value = "id") Long id, @RequestBody @Valid UpdateNotesDTO updateNotesDTO) {
         releaseServices.updateReleaseNotes(id, updateNotesDTO);
         GenericResponseDTO response = new GenericResponseDTO("Release atualizado com sucesso!");
@@ -89,6 +109,11 @@ public class ReleaseController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar", description = "Deletar release")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Release deletado com sucesso!"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
     public ResponseEntity<Object> deleteRelease(@PathVariable(value = "id") Long id){
         releaseServices.deleteRelease(id);
         GenericResponseDTO response = new GenericResponseDTO("Release deletado com sucesso!");
@@ -97,6 +122,10 @@ public class ReleaseController {
 
     //Paginação
     @GetMapping
+    @Operation(summary = "Listar", description = "Listar releases")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Releases listados com sucesso!"),
+    })
     public ResponseEntity<Page<ReleaseEntity>> getAllReleases(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(releaseServices.findAll(pageable));
     }
