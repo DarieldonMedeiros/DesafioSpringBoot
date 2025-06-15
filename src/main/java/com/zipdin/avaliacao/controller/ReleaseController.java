@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zipdin.avaliacao.dto.AddCommitsRequestDTO;
 import com.zipdin.avaliacao.dto.GenericResponseDTO;
 import com.zipdin.avaliacao.dto.ReleaseDTO;
 import com.zipdin.avaliacao.dto.ReleaseResponseDTO;
@@ -128,6 +130,18 @@ public class ReleaseController {
     })
     public ResponseEntity<Page<ReleaseEntity>> getAllReleases(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(releaseServices.findAll(pageable));
+    }
+
+    @PatchMapping("/{id}/commits")
+    @Operation(summary = "Atualizar", description = "Atualizar commits do release com o ID x")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Commits atualizados com sucesso!"),
+        @ApiResponse(responseCode = "500", description = "Ocorreu um erro inesperado"),
+    })
+    public ResponseEntity<GenericResponseDTO> addCommitsToRelease(@PathVariable(value = "id") Long id, @RequestBody @Valid AddCommitsRequestDTO addCommitsRequestDTO){
+        releaseServices.addCommitsToRelease(id, addCommitsRequestDTO);
+        GenericResponseDTO response = new GenericResponseDTO("Commits atualizados com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
