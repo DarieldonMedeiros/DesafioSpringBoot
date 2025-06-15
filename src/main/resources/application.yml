@@ -1,13 +1,16 @@
 spring:
   application:
     name: avaliacao
+  profiles:
+    active: default
+
   output:
     ansi:
       enabled: always
   datasource:
-    url: jdbc:h2:mem:releases
-    username: user
-    password: password
+    url: ${DATASOURCE_URL:jdbc:h2:mem:releases}
+    username: ${DATASOURCE_USERNAME:user}
+    password: ${DATASOURCE_PASSWORD:password}
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -20,6 +23,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
 api:
   security:
     token:
@@ -27,3 +32,5 @@ api:
 
 springdoc:
   override-with-generic-response: false
+  swagger-ui:
+    path: /swagger-ui.html

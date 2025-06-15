@@ -312,6 +312,55 @@ Foi necessário também criar uma Função de validação (`@Bean`) no arquivo [
     }
 ```
 
+A seguir, tem uma imagem de como fica o Swagger, obtido pelo link http://localhost:8080/swagger-ui/index.html#/
+
+![Endpoint POST](./imgs/SWAGGER.jpg)
+
+<center><b>Visual do Swagger na Web </b></center>
+<br>
+
+Pelo Swagger, tem como fazer a autenticação via um Bearer, que é obtido pela requisição de cadastro em seguida do login no Postman.
+
+### 🔷 **Dockerfile**
+
+Antes de rodar o Dockerfile, primeiramente é necessário criar o pacote .jar da aplicação. Ao abrir o prompt de comando/PowerShell no windows, o comando utilizado foi o seguinte:
+
+```PowerShell
+./mvnw clean package -DskipTests
+```
+
+Após a criação do arquivo .jar na pasta target, o arquivo Dockerfile utilizado foi o que está logo abaixo:
+
+```Dockerfile
+FROM ubuntu:latest AS build
+
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . .
+
+RUN apt-get install maven -y
+RUN mvn clean install
+
+FROM openjdk:17-jdk-slim
+
+EXPOSE 8080
+COPY --from=build /target/avaliacao-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+Com esse arquivo Dockerfile, é possível criar a imagem com o seguinte comando:
+
+```PowerShell
+docker build --tag zipdin/avaliacao .
+```
+
+Após a criação da imagem, agora é necessário o seguinte comando para rodar a imagem.
+
+```PowerShell
+docker run --name avaliacao -p 8080:8080 zipdin/avaliacao
+```
+
 ## ✅ Requisitos Técnicos
 
 - Java 17+ com Spring Boot: **_(Foi utilizado o Java 17 nesta avaliação) ✅_**
@@ -325,4 +374,24 @@ Foi necessário também criar uma Função de validação (`@Bean`) no arquivo [
 ## 🔧 Pontos Bônus (não obrigatórios)
 
 - Criar paginação e filtros de pesquisa nas APIs de listagem: **_Implementado com sucesso a parte de paginação através do Get All! ✅_**
-- Criar um dockerfile para a aplicação, que permita a fácil construção de uma imagem Docker da aplicação: **_Pendente❌_**
+- Criar um dockerfile para a aplicação, que permita a fácil construção de uma imagem Docker da aplicação: **_Implementado com sucesso! ✅_**
+
+## 📲 Dependências Utilizadas no pom.xml
+
+- Spring DATA JPA
+- Validation
+- Lombok
+- Spring WEB
+- Spring Security
+- Java JWT
+- SpringDoc OpenAPI (Swagger)
+- H2 Database
+
+  ## Autor
+
+  Darieldon de Brito Medeiros
+
+  ### Seguem abaixo o meu email e meu linkedin
+
+  <a href = "darieldonbm99@outlook.com"><img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white" target="_blank"></a>
+  <a href="https://www.linkedin.com/in/darieldon-de-brito-medeiros" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
