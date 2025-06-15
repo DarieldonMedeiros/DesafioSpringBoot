@@ -221,7 +221,7 @@ Assim como foi feito nos itens anteriores, será mostrado o código responsável
 - Java 17+ com Spring Boot: **_(Foi utilizado o Java 17 nesta avaliação) ✅_**
 - Persistência com JPA: **_Implementado com sucesso! ✅_**
 - Commit da prova em repositório Git público ou zip: **_Implementado com sucesso! ✅_**
-- Autenticação JWT (mockada ou simples): **_Pendente❌_**
+- Autenticação JWT (mockada ou simples): **_Implementado com sucesso! ✅_**
 - Tratamento de erros e validações: **_Pendente❌_**
 - Swagger ou documentação de endpoints: **_Pendente❌_**
 

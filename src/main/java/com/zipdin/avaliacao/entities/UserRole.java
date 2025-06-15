@@ -2,7 +2,7 @@ package com.zipdin.avaliacao.entities;
 
 public enum UserRole {
 
-    ADMIN("admin"), 
+    ADMIN("admin"),
     USER("user");
 
     private String role;

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.zipdin.avaliacao.dto.UpdateNotesDTO;
@@ -24,6 +25,8 @@ public class ReleaseServices {
 
     @Transactional
     public ReleaseEntity saveRelease(ReleaseEntity releaseEntity){
+        String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
+        releaseEntity.setUserUpdate(userUpdate);
         return releaseRepository.save(releaseEntity);
     }
 
@@ -35,12 +38,11 @@ public class ReleaseServices {
     }
 
     public void updateReleaseNotes(Long id, UpdateNotesDTO updateNotesDTO) {
+        String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<ReleaseEntity> releaseEntityOptional = findById(id);
-
-        // String userUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
         releaseEntityOptional.ifPresent(releaseEntity -> {
+            releaseEntity.setUserUpdate(userUpdate);
             releaseEntity.setNotes(updateNotesDTO.notes());
-            // releaseEntity.setUpdatedBy(userUpdate);
             releaseRepository.save(releaseEntity);
         });
     }
