@@ -387,7 +387,7 @@ docker run --name avaliacao -p 8080:8080 zipdin/avaliacao
 - SpringDoc OpenAPI (Swagger)
 - H2 Database
 
-  ## Autor
+## 🧑🏻‍💼 Autor
 
   Darieldon de Brito Medeiros
 
