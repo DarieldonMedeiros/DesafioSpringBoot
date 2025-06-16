@@ -514,6 +514,7 @@ docker run --name avaliacao -p 8080:8080 zipdin/avaliacao
 - SpringDoc OpenAPI (Swagger)
 - H2 Database
 
+OBS.: O único item que de fato não consegui fazer foi os Testes Unitários e/ou de integração.
 ## 🧑🏻‍💼 Autor
 
 Darieldon de Brito Medeiros
